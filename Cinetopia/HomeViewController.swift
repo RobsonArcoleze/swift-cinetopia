@@ -66,7 +66,7 @@ class HomeViewController: UIViewController {
     
     private func setupConstraints(){
         NSLayoutConstraint.activate([
-            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 64),
+            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             coupleImageView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 32),
