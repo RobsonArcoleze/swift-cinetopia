@@ -41,6 +41,7 @@ class HomeViewController: UIViewController {
         button.backgroundColor = .buttonBackgroundColoer
         button.titleLabel?.font = .boldSystemFont(ofSize: 20)
         button.layer.cornerRadius = 32
+        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -50,6 +51,10 @@ class HomeViewController: UIViewController {
         view.backgroundColor = .background
         addSubiews()
         setupConstraints()
+    }
+    
+    @objc private func buttonPressed(){
+        navigationController?.pushViewController(MoviesViewController(), animated: true)
     }
     
     private func addSubiews(){
