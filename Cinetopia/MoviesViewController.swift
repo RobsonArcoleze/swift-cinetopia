@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MoviesViewController: UIViewController, UITableViewDataSource {
+class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var names: [String] = [
         "Ana", "Rafael", "Geovanca", "Mariana", "Marcelo", "Mariana", "Rafael", "Geovanca", "Mariana", "Marcelo"
@@ -19,6 +19,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .clear
         tableView.dataSource = self
+        tableView.delegate = self   
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "nameCell")
         return tableView
     }()
@@ -64,6 +65,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource {
         cell.backgroundColor = .clear
         cell.textLabel?.textColor = .white
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
 
