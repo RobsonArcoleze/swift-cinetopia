@@ -7,19 +7,18 @@
 
 import UIKit
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MoviesViewController: UIViewController  {
     
     var names: [String] = [
         "Ana", "Rafael", "Geovanca", "Mariana", "Marcelo", "Mariana", "Rafael", "Geovanca", "Mariana", "Marcelo"
     ]
-
-
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .clear
         tableView.dataSource = self
-        tableView.delegate = self   
+        tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "nameCell")
         return tableView
     }()
@@ -55,6 +54,25 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         navigationItem.setHidesBackButton(true, animated: true)
     }
     
+
+    
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}
+
+
+extension MoviesViewController: UITableViewDataSource, UITableViewDelegate {
+    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return names.count
     }
@@ -70,16 +88,4 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
