@@ -15,7 +15,7 @@ class MoviesViewController: UIViewController  {
         tableView.backgroundColor = .clear
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "movieCell")
+        tableView.register(MovieTableViewCell.self, forCellReuseIdentifier: "movieCell")
         return tableView
     }()
 
@@ -61,14 +61,19 @@ extension MoviesViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "movieCell", for: indexPath)
-        cell.textLabel?.text = movies[indexPath.row].title
-        cell.backgroundColor = .clear
-        cell.textLabel?.textColor = .white
-        return cell
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "movieCell", for: indexPath) as? MovieTableViewCell {
+            cell.configureCell(movie: movies[indexPath.row])
+            cell.selectionStyle = .none
+            return cell
+        }
+        return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 160
     }
 }
