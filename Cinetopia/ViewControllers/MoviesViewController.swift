@@ -11,6 +11,8 @@ class MoviesViewController: UIViewController  {
     
     private var filteredMovies: [Movie] = []
     private var isSearchingActive: Bool = false
+    private let moviesService: MoviesService = MoviesService()
+    private var movies: [Movie] = []
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -41,9 +43,33 @@ class MoviesViewController: UIViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .background
+        let tapGastureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismisskeyboard))
+        view.addGestureRecognizer(tapGastureRecognizer)
         setupNaviagationBar()
         addSubviews()
         setupConstraints()
+        fetchMovies()
+    }
+    
+    private func fetchMovies(){
+        moviesService.getMovies { result in
+            switch result {
+            case .success(let movies):
+                DispatchQueue.main.async {
+                    self.movies = movies
+                    self.tableView.reloadData()
+                }
+            case .failure(let error):
+                print(error)
+            }
+
+
+
+        }
+    }
+    
+    @objc private func dismisskeyboard() {
+        searchBar.resignFirstResponder()
     }
     
     private func addSubviews() {
@@ -115,4 +141,9 @@ extension MoviesViewController: UISearchBarDelegate {
         }
         tableView.reloadData()
     }
+    
+    private func searchBarShouldEndEditing(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
 }
