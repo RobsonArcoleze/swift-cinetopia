@@ -43,34 +43,31 @@ class MoviesViewController: UIViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .background
-        let tapGastureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismisskeyboard))
-        view.addGestureRecognizer(tapGastureRecognizer)
+//        let tapGastureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismisskeyboard))
+//        view.addGestureRecognizer(tapGastureRecognizer)
         setupNaviagationBar()
         addSubviews()
         setupConstraints()
-        fetchMovies()
+        Task{
+            await fetchMovies()
+        }
+        
     }
     
-    private func fetchMovies(){
-        moviesService.getMovies { result in
-            switch result {
-            case .success(let movies):
-                DispatchQueue.main.async {
-                    self.movies = movies
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-
-
-
+    private func fetchMovies() async{
+        do{
+            movies = try await moviesService.getMovies()
+            tableView.reloadData()
+        } catch {
+            let alert = UIAlertController(title: "Erro", message: error.localizedDescription, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
         }
     }
-    
-    @objc private func dismisskeyboard() {
-        searchBar.resignFirstResponder()
-    }
+//    
+//    @objc private func dismisskeyboard() {
+//        searchBar.resignFirstResponder()
+//    }
     
     private func addSubviews() {
         view.addSubview(tableView)
@@ -118,6 +115,7 @@ extension MoviesViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        print("Selected movie: \(indexPath.row)")
         let movie = isSearchingActive ? filteredMovies[indexPath.row] : movies[indexPath.row]
         navigationController?.pushViewController(MovieDetailsViewController(movie: movie), animated: true)
     }
@@ -129,21 +127,21 @@ extension MoviesViewController: UITableViewDataSource, UITableViewDelegate {
 
 
 extension MoviesViewController: UISearchBarDelegate {
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
         if searchText.isEmpty {
             isSearchingActive = false
         }else{
-            isSearchingActive = true
-            filteredMovies = movies.filter({movie in
+            
+            filteredMovies = movies.filter { movie in
                 movie.title.lowercased().contains(searchText.lowercased())
-            })
+            }
+            isSearchingActive = true
         }
         tableView.reloadData()
     }
     
-    private func searchBarShouldEndEditing(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-    }
+
     
 }
